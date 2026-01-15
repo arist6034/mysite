@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.simpleBoard.Answer;
@@ -47,7 +48,9 @@ public class QuestionController {
 	
 	// 목록 페이지로 이동
 	@PostMapping("/create")
-	public String questionCreate() {
-		// 질문 저장
+	public String questionCreate(Model model, @RequestParam(value="subject") String subject, @RequestParam(value="content") String content) {
+		this.questionService.create(subject, content);
+		System.out.println("테스트");
+		return "redirect:/question/list";
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.simpleBoard.qustion;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,4 +29,11 @@ public class QuestionService {
 	}
 	
 	//create() => 질문을 저장하는 로직
+	public void create(String subject, String content) {
+		Question question = new Question();
+		question.setSubject(subject);
+		question.setContent(content);
+		question.setCreateDate(LocalDateTime.now());
+		qusQuestionRepository.save(question);
+	}
 }

@@ -1,6 +1,14 @@
 <html layout:decorate="~{layout}">
 	<div class="container" layout:fragment="content">
-		제목 입력받는 부분
-		내용 입력받는 부분
+		<div class="p-5 text-center bg-body-tertiary rounded-3">
+			<h1>질문 등록</h1>
+		</div>
+		<form th:action="@{|/question/create|}" method="post">
+			<label for="">제목 입력</label><br />
+			<input type="text" class="mb-3" name="subject"  id="inputQuestionSubject"/><br />
+			<label for="">내용 입력</label><br />
+			<textarea name="content" id="inputQuestionContent" cols="30" rows="10"></textarea>
+			<input type="submit" value="질문 등록" />
+		</form>
 	</div>
 </html>
