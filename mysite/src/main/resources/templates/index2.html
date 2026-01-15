@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div th:insert="~{fragments :: myHeader}"></div>
+		<div th:replace="~{fragments :: myFooter}"></div>
+	<p th:text="${text}">기본 텍스트</p>
+	<p th:utext="${text}">HTML 태그 포함 텍스트</p>
+	<p>직접 출력 예시: [[${"문자열 직접 입력"}]]</p>
+
+	
+	
+	<!--조건형-->
+	<p th:if="${ifTest == true}">조건이 참입니다!</p> 
+	<p th:unless="${ifTest == true}">조건이 거짓일 때만 보입니다.</p>
+
+	<div th:switch="${userRole}">
+	    <p th:case="'ADMIN'">당신은 관리자입니다.</p>
+	    <p th:case="'MANAGER'">당신은 운영자입니다.</p>
+	    <p th:case="'USER'">당신은 일반 회원입니다.</p>
+	    
+	    <p th:case="*">아무것도 없습니다.</p>
+	</div>
+	
+	<!--반복형-->
+	<div th:each="a, loop : ${fruits}">
+		<p th:text="|${loop.count}번째${a}, index=${loop.index}|"></p>
+		<br />
+	</div>
+	<input type="text" th:value="${fruits[1]}" /> <!-- 비슷하게 checked도 있음--> <br />
+	<a th:href="@{/}">홈으로</a><br />
+	<img th:src="@{/images/a.png}" alt="" />
+	<input type="text" th:attr="value='1234', placeholder='1234'" /><br />
+	<div th:class="${ifTest ? 'a_is_true' : 'a_is_not_true'}" th:text="${ifTest ? 'a_is_true' : 'a_is_not_true'}" ></div>
+	<div th:classappend="${ifTest ? 'a_is_true' : ''}" class="sayHi" th:text="${ifTest ? 'a_is_true 추가됨' : '추가 안 됨'}"></div>
+	<div th:style="${(ifTest ? 'background-color:red' : 'background-color:blue') + '; width:100px; height:100px'}"></div>
+	<form th:action="@{/index}">
+		<input type="radio" th:checked="${ifTest==true}" /> a
+		<input type="radio"th:checked="${ifTest==false}" /> b
+		<input type="submit" />
+	</form>
+	
+	
+	
+	<!-- ${}는 변수를 가져오고 *{}는 th:object에서 지정된 개체의 속성을 가져올 수 있고 #{}는 언어 관련인듯 함 @{}는 경로를 의미함-->
+</body>
+</html>

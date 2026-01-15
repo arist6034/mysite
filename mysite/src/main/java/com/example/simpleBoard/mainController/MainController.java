@@ -12,7 +12,7 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String root() {
-		return "redirect:/question/list";
+		return "index";
 	}
 	@GetMapping("/index")
 	public String index(Model model) {
@@ -30,7 +30,7 @@ public class MainController {
 		model.addAttribute("fruits",fruits);
 		model.addAttribute("text",text);
 		model.addAttribute("userRole", userRole);
-		return "index";
+		return "index2";
 	}
 	
 }
