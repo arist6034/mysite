@@ -1,0 +1,30 @@
+<html layout:decorate="~{layout}">
+	<div class="container" layout:fragment="content">
+		<div class="row">
+			<div class="col">
+				<div class="p-5 text-center bg-body-tertiary rounded-3">
+					<h1>로그인</h1>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<form method="post" th:action="@{/user/login}">
+					<div th:if="${param.error}">
+						<div class="alert alert-danger">사용자 이름 또는 비밀번호를 확인해주세요.</div>
+					</div>
+				  <div class="mb-3">
+				    <label for="username" class="form-label">username</label>
+				    <input type="text" class="form-control"aria-describedby="emailHelp" id="username" name="username">
+				    <div id="emailHelp" class="form-text">input your username</div>
+				  </div>
+				  <div class="mb-3">
+				    <label for="password" class="form-label">Password</label>
+				    <input type="password" class="form-control" id="password" name="password">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</html>

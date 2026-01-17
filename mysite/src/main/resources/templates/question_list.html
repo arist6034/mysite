@@ -18,9 +18,10 @@
 				  </thead>
 				  <tbody>
 					<tr th:each="question, loop : ${questionList}">
-						<td th:text="${loop.count}"></td>
+						<td th:text="${questionList.getTotalElements - (questionList.number * questionList.size)- loop.index}"></td>
 						<td>
 							<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+							<spen class="text-danger badge bg-warning" th:if="${#lists.size(question.answerList) > 0}" th:text="${#lists.size(question.answerList)}">댓글</spen>
 						</td>
 						<td th:text="${#temporals.format(question.createDate)}" th:href></td>
 					</tr>
@@ -34,7 +35,7 @@
 			<nav aria-label="Page navigation example" th:if="${!questionList.isEmpty}" class="w-100" >
 			<ul class="pagination justify-content-center">
 			  <li class="page-item" th:classappend="${!questionList.hasPrevious} ? 'disabled'"><a class="page-link" th:href="@{|?page=${questionList.number-1}|}" >이전</a></li>
-			  <li class="page-item" th:each="page : ${#numbers.sequence(0, questionList.totalPages)}"><a class="page-link" th:href="@{|?page=${page}|}" th:classappend="${questionList.number == page} ? 'active'" th:if="${page >= questionList.number-5 and page <= questionList.number+5}">[[${page}]]</a></li>
+			  <li class="page-item" th:each="page : ${#numbers.sequence(0, questionList.totalPages-1)}" th:classappend="${questionList.number == page} ? 'active'" th:if="${page >= questionList.number-5 and page <= questionList.number+5}"><a class="page-link" th:href="@{|?page=${page}|}" >[[${page+1}]]</a></li>
 			  <li class="page-item" th:classappend="${!questionList.hasNext} ? 'disabled'"><a class="page-link" th:href="@{|?page=${questionList.number+1}|}">다음</a></li>
 			</ul>
 			</nav>
