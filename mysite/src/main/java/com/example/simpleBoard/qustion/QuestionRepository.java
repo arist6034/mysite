@@ -1,4 +1,4 @@
-package com.example.simpleBoard;
+package com.example.simpleBoard.qustion;
 
 import java.util.List;
 

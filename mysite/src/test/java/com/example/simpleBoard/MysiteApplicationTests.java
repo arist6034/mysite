@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.simpleBoard.Answer;
 import com.example.simpleBoard.AnswerRepository;
-import com.example.simpleBoard.Question;
-import com.example.simpleBoard.QuestionRepository;
+import com.example.simpleBoard.qustion.Question;
+import com.example.simpleBoard.qustion.QuestionRepository;
 
 @SpringBootTest
 class MysiteApplicationTests {

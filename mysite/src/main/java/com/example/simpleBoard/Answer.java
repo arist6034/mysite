@@ -2,6 +2,9 @@ package com.example.simpleBoard;
 
 import java.time.LocalDateTime;
 
+import com.example.simpleBoard.qustion.Question;
+import com.example.simpleBoard.user.SiteUser;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,4 +30,9 @@ public class Answer {
 	
 	@ManyToOne // M:1
 	private Question question;
+	
+	@ManyToOne
+	private SiteUser author;
+	
+	private LocalDateTime modifyDate;
 }

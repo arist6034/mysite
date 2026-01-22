@@ -11,8 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.example.simpleBoard.Question;
-import com.example.simpleBoard.QuestionRepository;
+import com.example.simpleBoard.user.SiteUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,11 +36,23 @@ public class QuestionService {
 	}
 	
 	//create() => 질문을 저장하는 로직
-	public void create(String subject, String content) {
+	public void create(String subject, String content, SiteUser siteuser) {
 		Question question = new Question();
 		question.setSubject(subject);
 		question.setContent(content);
 		question.setCreateDate(LocalDateTime.now());
+		question.setAuthor(siteuser);
 		qusQuestionRepository.save(question);
+	}
+	
+	public void modify(Question question, String subject, String content) {
+		question.setSubject(subject);
+		question.setContent(content);
+		question.setModifyDate(LocalDateTime.now());
+		this.qusQuestionRepository.save(question);
+	}
+	
+	public void delete(Question question) {
+		this.qusQuestionRepository.delete(question);
 	}
 }
