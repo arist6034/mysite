@@ -10,12 +10,15 @@
 	<div class="card mb-5">
 	  <div class="card-header">
 	    질문 내용	
+		<a href="javascript:void(0);" class="recommand btn btn-outline-secondary ms-3" th:data-uri="@{|/question/vote/${question.id}|}" sec:authorize="isAuthenticated()">추천 <span class="badge rounded-pill bg-success p-2">[[${#lists.size(question.voter)}]]</span></a>
+		<a href="javascript:void(0);" class="btn btn-outline-secondary ms-3" sec:authorize="isAnonymous()">추천 <span class="badge rounded-pill bg-success p-2">[[${#lists.size(question.voter)}]]</span></a>
 		<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-outline-info float-right" sec:authorize="isAuthenticated()" th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}">수정</a>
 		<a href="javascript:void(0);" class="btn btn-outline-danger float-right delete" sec:authorize="isAuthenticated()" th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}" th:data-uri="@{|/question/delete/${question.id}|}">삭제</a>
 	  </div>
 	  <div class="card-body">
 		<div th:text="${question.content}" class="mb-5">내용</div>
-	    <p>[[${#temporals.format(question.createDate)}]]<span th:text="' [작성자: ' + ${question.author?.username} + ']'">내용</span></p>
+	    <p>작성일 : [[${#temporals.format(question.createDate)}]]<span th:text="' [작성자: ' + ${question.author?.username} + ']'">내용</span></p>
+	    <p th:if="${question.modifyDate!=null}">수정일 : [[${#temporals.format(question.modifyDate)}]]<span th:text="' [작성자: ' + ${question.author?.username} + ']'">내용</span></p>
 	  </div>
 	</div>
 	
@@ -23,18 +26,21 @@
 	<ul>
 		<li th:each="answer : ${question.answerList}">
 			<div class="card mb-5">
+				<a th:id="|answer_${answer.id}|"></a>
 				  <div class="card-header">
 				    답변
+					<a href="javascript:void(0);" class="recommand btn btn-outline-secondary ms-3" th:data-uri="@{|/answer/vote/${answer.id}|}" sec:authorize="isAuthenticated()" >추천 <span class="badge rounded-pill bg-success p-2">[[${#lists.size(answer.voter)}]]</span></a>
+					<a href="javascript:void(0);" class="btn btn-outline-secondary ms-3" sec:authorize="isAnonymous()">추천 <span class="badge rounded-pill bg-success p-2">[[${#lists.size(answer.voter)}]]</span></a>
 					<a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-outline-info float-right" sec:authorize="isAuthenticated()" th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}">수정</a>
 					<a href="javascript:void(0);" class="btn btn-outline-danger float-right delete" sec:authorize="isAuthenticated()" th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}" th:data-uri="@{|/answer/delete/${answer.id}|}">삭제</a>
 				  </div>
 				  <div class="card-body">
 					<div th:text="${answer.content}" class="mb-5">내용</div>
-				    <p>[[${#temporals.format(question.createDate)}]]<span th:text="' [작성자: ' + ${answer.author?.username} + ']' ">내용</span></p>
+				    <p>[[${#temporals.format(answer.createDate)}]]<span th:text="' [작성자: ' + ${answer.author?.username} + ']' ">내용</span></p>
+				    <p th:if="${answer.modifyDate!=null}">[[${#temporals.format(answer.modifyDate)}]]<span th:text="' [작성자: ' + ${answer.author?.username} + ']' ">내용</span></p>
 				  </div>
 				</div>
 		</li>
-		
 	</ul>
 	<form th:action="@{|/answer/create/${question.id}|}" method="post" th:object="${answerForm}">
 		<div th:replace="~{form_errors :: formErrorsFragment}"></div>
@@ -50,6 +56,15 @@
 		Array.from(delete_elements).forEach(function(element){
 			element.addEventListener("click",function(){
 				if(confirm("정말로 삭제하시겠습니까?")){
+					location.href = this.dataset.uri;
+				}
+			})
+		})
+		
+		const recommand_elements = document.getElementsByClassName("recommand");
+		Array.from(recommand_elements).forEach(function(element){
+			element.addEventListener("click",function(){
+				if(confirm("정말로 하시겠습니까?")){
 					location.href = this.dataset.uri;
 				}
 			})
