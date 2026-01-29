@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,26 +42,48 @@ public class QuestionController {
 
 
 	@GetMapping("/list")
-	public String list(Model model, @RequestParam(value="page",defaultValue = "0") int page, @RequestParam(value="kw", defaultValue="") String kw) {
-		Page<Question> paging = this.questionService.getList(page, kw);
-		model.addAttribute("questionList", paging);
-		model.addAttribute("kw", kw);
-		return "question_list";
+	public String list(Model model, @RequestParam(value="page",defaultValue = "0") int page, 
+	                   @RequestParam(value="kw", defaultValue="") String kw,
+	                   @AuthenticationPrincipal UserDetails userDetails) { // 추가
+	    
+	    Page<Question> paging = this.questionService.getList(page, kw);
+	    model.addAttribute("questionList", paging);
+	    model.addAttribute("kw", kw);
+	    
+	    // 프로필 이미지 추가 로직
+	    if (userDetails != null) {
+	        SiteUser user = userService.getUser(userDetails.getUsername());
+	        model.addAttribute("profileImage", user.getImageUrl());
+	    }
+	    
+	    return "question_list";
 	}
-	
+
 	@GetMapping("/detail/{id}")
-	public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
-		Question question = this.questionService.getQuestion(id);
-		
-		model.addAttribute(question);
-		return "question_detail";
+	public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm,
+	                     @AuthenticationPrincipal UserDetails userDetails) { // 추가
+	    Question question = this.questionService.getQuestion(id);
+	    model.addAttribute(question);
+	    
+	    if (userDetails != null) {
+	        SiteUser user = userService.getUser(userDetails.getUsername());
+	        model.addAttribute("profileImage", user.getImageUrl());
+	    }
+	    
+	    return "question_detail";
 	}
-	
+
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/create")
-	public String questionCreate(QuestionForm questionForm) {
-		
-		return "question_form";
+	public String questionCreate(QuestionForm questionForm, Model model, // Model 추가
+	                             @AuthenticationPrincipal UserDetails userDetails) { // 추가
+	    
+	    if (userDetails != null) {
+	        SiteUser user = userService.getUser(userDetails.getUsername());
+	        model.addAttribute("profileImage", user.getImageUrl());
+	    }
+	    
+	    return "question_form";
 	}
 	
 	// 목록 페이지로 이동
@@ -76,15 +100,23 @@ public class QuestionController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/modify/{id}")
-	public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
-		Question question = this.questionService.getQuestion(id);
-		if(!question.getAuthor().getUsername().equals(principal.getName())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
-		}
-		questionForm.setSubject(question.getSubject());
-		questionForm.setContent(question.getContent());
-		
-		return "question_form";
+	public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, 
+	                             Principal principal, Model model) { // Model 추가
+	    
+	    Question question = this.questionService.getQuestion(id);
+	    
+	    if(!question.getAuthor().getUsername().equals(principal.getName())) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+	    }
+	    if (principal != null) {
+	        SiteUser user = userService.getUser(principal.getName());
+	        model.addAttribute("profileImage", user.getImageUrl());
+	    }
+
+	    questionForm.setSubject(question.getSubject());
+	    questionForm.setContent(question.getContent());
+	    
+	    return "question_form";
 	}
 	
 	@PreAuthorize("isAuthenticated()")

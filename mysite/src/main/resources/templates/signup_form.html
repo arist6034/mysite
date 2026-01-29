@@ -9,7 +9,7 @@
 		</div>
 		<div class="row">
 			<div class="col">
-				<form th:object="${userCreateForm}" method="post" th:action="@{/user/signup}">
+				<form th:object="${userCreateForm}" method="post" th:action="@{/user/signup}" enctype="multipart/form-data">
 					<div th:replace="~{form_errors :: formErrorsFragment}"></div>
 				  <div class="mb-3">
 				    <label for="username" class="form-label">username</label>
@@ -28,6 +28,10 @@
 				  <div class="mb-3">
 				    <label for="password2" class="form-label">Password again</label>
 				    <input type="password" class="form-control"th:field="*{password2}">
+				  </div>
+				  <div class="mb-3">
+				    <label for="formFile" class="form-label">사용자 프로필 등록(옵션)</label>
+				    <input class="form-control" type="file" id="imageFile" name="imageFile" accept="image/*">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Submit</button>
 				</form>
